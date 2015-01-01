@@ -14,7 +14,14 @@ What's Missing (almost everything else, but especially the following)
 - External login support
 
 # How to Use
-Fork the repository, build, add as a reference to your project. In the future I expect to create a Nuget package. Also add the Parse Nuget package.
+
+Install the Nuget package.
+
+```
+PM> Install-Package Parse.AspNet.Identity 
+```
+
+Or fork the repository, build, and add as a reference to your project. Note that it also requires the Parse Nuget package.
 
 As of now, I have only tested it with ASP.NET MVC 5. To use it, make the following changes to the following files:
 
