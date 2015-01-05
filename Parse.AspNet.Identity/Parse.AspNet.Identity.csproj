@@ -49,6 +49,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ParseApplicationUserBase.cs" />
+    <Compile Include="ParseIdentityRole.cs" />
+    <Compile Include="ParseRoleStore.cs" />
     <Compile Include="ParseUserManager.cs" />
     <Compile Include="ParseUserStore.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
 
@@ -11,7 +12,8 @@ namespace Parse.AspNet.Identity
         IUserPasswordStore<TUser, string>, 
         IUserTwoFactorStore<TUser, string>,
         IUserPhoneNumberStore<TUser>,
-        IUserLoginStore<TUser> where TUser : ParseApplicationUserBase, new()
+        IUserLoginStore<TUser>,
+        IUserRoleStore<TUser> where TUser : ParseApplicationUserBase, new()
     {
         public ParseUserStore()
         {
@@ -20,7 +22,7 @@ namespace Parse.AspNet.Identity
         
         public void Dispose()
         {
-            throw new NotImplementedException();
+            
         }
 
         #region IUserStore
@@ -220,6 +222,45 @@ namespace Parse.AspNet.Identity
         }
 
         public Task<TUser> FindAsync(UserLoginInfo login)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
+
+        #region IUserRoleStore
+
+        public Task AddToRoleAsync(TUser user, string roleName)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task RemoveFromRoleAsync(TUser user, string roleName)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<IList<string>> GetRolesAsync(TUser user)
+        {
+            // want to create your roles?
+            var roleACL = new ParseACL();
+            roleACL.PublicReadAccess = true;
+            var nrole = new ParseRole("Admin", roleACL);
+            //nrole.Users.Add(user.User);
+            await nrole.SaveAsync();
+
+            // get all roles the current user belongs to
+            var query = from role in ParseRole.Query
+                where role.Get<IList<string>>("users").Contains(user.Id)
+                select role;
+
+            var roles = await query.FindAsync();
+
+            // return the list of names
+            return roles.Select(r => r.Name).ToList();
+        }
+
+        public Task<bool> IsInRoleAsync(TUser user, string roleName)
         {
             throw new NotImplementedException();
         }

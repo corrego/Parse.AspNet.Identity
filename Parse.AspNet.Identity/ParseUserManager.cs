@@ -10,13 +10,9 @@ namespace Parse.AspNet.Identity
     {
         public ParseUserManager(IUserStore<TUser> store) : base(store)
         {
-            
+            //ClaimsIdentityFactory = new ClaimsIdentityFactory<TUser, string>();
         }
 
-        public override Task<IdentityResult> CreateAsync(TUser user)
-        {
-            return base.CreateAsync(user);
-        }
 
         public override async Task<IdentityResult> CreateAsync(TUser user, string password)
         {
@@ -98,5 +94,6 @@ namespace Parse.AspNet.Identity
         {
             return Task.FromResult(new List<UserLoginInfo>() as IList<UserLoginInfo>);
         }
+
     }
 }
