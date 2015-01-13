@@ -2,11 +2,11 @@
 
 namespace Parse.AspNet.Identity
 {
-    public class ParseApplicationUserBase : IUser<string>
+    public class IdentityUser : IUser<string>
     {
         internal ParseUser User { get; set; }
 
-        public ParseApplicationUserBase()
+        public IdentityUser()
         {
             User = new ParseUser();
 

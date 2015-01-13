@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+    <metadata>
+        <id>Parse.AspNet.Identity</id>
+        <version>0.1</version>
+        <authors>Carlos Orrego</authors>
+        <projectUrl>https://github.com/corrego/Parse.AspNet.Identity</projectUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>Allows you to store and manage your users using the Parse.com cloud backend and Asp.Net Identity for your web application.</description>
+        <summary>Asp.Net Identity provider for Parse.com user management.</summary>
+        <dependencies>
+            <dependency id="parse" />
+        </dependencies>
+    </metadata>
+    <files>
+        <file src="Parse.AspNet.Identity\bin\Release\Parse.AspNet.Identity.dll" target="lib\Parse.AspNet.Identity.dll" />
+    </files>
+</package>

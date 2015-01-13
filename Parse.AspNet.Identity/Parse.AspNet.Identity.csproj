@@ -48,7 +48,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ParseApplicationUserBase.cs" />
+    <Compile Include="IdentityUser.cs" />
+    <Compile Include="IdentityUserLogin.cs" />
     <Compile Include="ParseIdentityRole.cs" />
     <Compile Include="ParseRoleStore.cs" />
     <Compile Include="ParseUserManager.cs" />

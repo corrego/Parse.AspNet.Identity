@@ -13,7 +13,7 @@ namespace Parse.AspNet.Identity
         IUserTwoFactorStore<TUser, string>,
         IUserPhoneNumberStore<TUser>,
         IUserLoginStore<TUser>,
-        IUserRoleStore<TUser> where TUser : ParseApplicationUserBase, new()
+        IUserRoleStore<TUser> where TUser : IdentityUser, new()
     {
         public ParseUserStore()
         {
@@ -206,19 +206,63 @@ namespace Parse.AspNet.Identity
 
         #region IUserLoginStore
 
-        public Task AddLoginAsync(TUser user, UserLoginInfo login)
+        public async Task AddLoginAsync(TUser user, UserLoginInfo login)
         {
-            throw new NotImplementedException();
+            if (user == null)
+            {
+                throw new ArgumentNullException("user");
+            }
+            if (login == null)
+            {
+                throw new ArgumentNullException("login");
+            }
+
+            var newLogin = new IdentityUserLogin()
+            {
+                User = user.User,
+                LoginProvider = login.LoginProvider,
+                ProviderKey = login.ProviderKey
+            };
+
+            await newLogin.SaveAsync();
         }
 
-        public Task RemoveLoginAsync(TUser user, UserLoginInfo login)
+        public async Task RemoveLoginAsync(TUser user, UserLoginInfo loginInfo)
         {
-            throw new NotImplementedException();
+            if (user == null)
+            {
+                throw new ArgumentNullException("user");
+            }
+            if (loginInfo == null)
+            {
+                throw new ArgumentNullException("loginInfo");
+            }
+
+            var query = from login in IdentityUserLogin.Query
+                        where login.User.HasSameId(user.User) && login.ProviderKey == loginInfo.ProviderKey && login.LoginProvider == loginInfo.LoginProvider
+                        select login;
+
+            var entry = await query.FirstOrDefaultAsync();
+            if (entry!=null)
+            {
+                await entry.DeleteAsync();
+            }
         }
 
-        public Task<IList<UserLoginInfo>> GetLoginsAsync(TUser user)
+        public async Task<IList<UserLoginInfo>> GetLoginsAsync(TUser user)
         {
-            throw new NotImplementedException();
+            if (user == null)
+            {
+                throw new ArgumentNullException("user");
+            }
+
+            var query = from login in IdentityUserLogin.Query
+                where login.User.HasSameId(user.User)
+                select login;
+
+            var result = await query.FindAsync();
+            return result.Select(r => new UserLoginInfo(r.LoginProvider, r.ProviderKey
+                )).ToList();
         }
 
         public Task<TUser> FindAsync(UserLoginInfo login)

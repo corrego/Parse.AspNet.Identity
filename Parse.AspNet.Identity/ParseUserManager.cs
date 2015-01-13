@@ -6,7 +6,7 @@ using Microsoft.AspNet.Identity;
 
 namespace Parse.AspNet.Identity
 {
-    public class ParseUserManager<TUser> : UserManager<TUser> where TUser : ParseApplicationUserBase, IUser<string>
+    public class ParseUserManager<TUser> : UserManager<TUser> where TUser : IdentityUser, IUser<string>
     {
         public ParseUserManager(IUserStore<TUser> store) : base(store)
         {
