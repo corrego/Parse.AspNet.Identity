@@ -4,11 +4,11 @@ using Microsoft.AspNet.Identity;
 
 namespace Parse.AspNet.Identity
 {
-    internal class ParseRoleStore : IRoleStore<ParseIdentityRole, string>
+    public class ParseRoleStore : IRoleStore<ParseIdentityRole, string>
     {
         private readonly string adminRoleName;
 
-        public ParseRoleStore(string adminRoleName)
+        public ParseRoleStore(string adminRoleName = "Admin")
         {
             this.adminRoleName = adminRoleName;
         }

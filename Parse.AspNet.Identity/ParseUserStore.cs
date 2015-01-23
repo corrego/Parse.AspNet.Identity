@@ -287,11 +287,11 @@ namespace Parse.AspNet.Identity
         public async Task<IList<string>> GetRolesAsync(TUser user)
         {
             // want to create your roles?
-            var roleACL = new ParseACL();
-            roleACL.PublicReadAccess = true;
-            var nrole = new ParseRole("Admin", roleACL);
+            //var roleACL = new ParseACL();
+            //roleACL.PublicReadAccess = true;
+            //var nrole = new ParseRole("Admin", roleACL);
             //nrole.Users.Add(user.User);
-            await nrole.SaveAsync();
+            //await nrole.SaveAsync();
 
             // get all roles the current user belongs to
             var query = from role in ParseRole.Query

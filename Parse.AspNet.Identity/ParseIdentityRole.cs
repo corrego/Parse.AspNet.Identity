@@ -2,7 +2,7 @@
 
 namespace Parse.AspNet.Identity
 {
-    internal class ParseIdentityRole : IRole<string>
+    public class ParseIdentityRole : IRole<string>
     {
         public ParseIdentityRole()
         {
