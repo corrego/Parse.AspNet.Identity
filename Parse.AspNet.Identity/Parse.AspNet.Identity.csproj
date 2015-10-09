@@ -30,14 +30,17 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.AspNet.Identity.Core">
-      <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.1.0\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
+    <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\..\Soluciones\uGOWeb\packages\Microsoft.AspNet.Identity.Core.2.2.1\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="Parse">
-      <HintPath>..\packages\Parse.1.3.2\lib\net45\Parse.dll</HintPath>
+    <Reference Include="Parse, Version=1.6.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\Soluciones\uGOWeb\packages\parse.1.6.0\lib\net45\Parse.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="Parse.NetFx45">
-      <HintPath>..\packages\Parse.1.3.2\lib\net45\Parse.NetFx45.dll</HintPath>
+    <Reference Include="Parse.NetFx45, Version=1.6.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\Soluciones\uGOWeb\packages\parse.1.6.0\lib\net45\Parse.NetFx45.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

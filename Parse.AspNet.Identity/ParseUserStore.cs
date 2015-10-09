@@ -13,7 +13,7 @@ namespace Parse.AspNet.Identity
         IUserTwoFactorStore<TUser, string>,
         IUserPhoneNumberStore<TUser>,
         IUserLoginStore<TUser>,
-        IUserRoleStore<TUser> where TUser : IdentityUser, new()
+        IUserRoleStore<TUser> where TUser : ParseIdentityUser, new()
     {
         public ParseUserStore()
         {
@@ -99,14 +99,13 @@ namespace Parse.AspNet.Identity
             throw new NotImplementedException();
         }
 
-        public Task SetLockoutEndDateAsync(TUser user, DateTimeOffset lockoutEnd)
+        public async Task SetLockoutEndDateAsync(TUser user, DateTimeOffset lockoutEnd)
         {
-            throw new NotImplementedException();
         }
 
         public Task<int> IncrementAccessFailedCountAsync(TUser user)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(0);
         }
 
         public Task ResetAccessFailedCountAsync(TUser user)
@@ -116,7 +115,7 @@ namespace Parse.AspNet.Identity
 
         public Task<int> GetAccessFailedCountAsync(TUser user)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(0);
         }
 
         /// <summary>

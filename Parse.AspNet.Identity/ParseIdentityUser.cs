@@ -2,11 +2,11 @@
 
 namespace Parse.AspNet.Identity
 {
-    public class IdentityUser : IUser<string>
+    public class ParseIdentityUser : IUser<string>
     {
         internal ParseUser User { get; set; }
 
-        public IdentityUser()
+        public ParseIdentityUser()
         {
             User = new ParseUser();
 
@@ -23,6 +23,7 @@ namespace Parse.AspNet.Identity
         }
 
 
+        [ParseFieldName("phoneNumber")]
         public string PhoneNumber
         {
             get { return Get<string>("phoneNumber"); }
@@ -30,6 +31,7 @@ namespace Parse.AspNet.Identity
             set { User["phoneNumber"] = value; }
         }
 
+        [ParseFieldName("phoneNumberConfirmed")]
         public bool PhoneNumberConfirmed
         {
             get { return Get<bool>("phoneNumberConfirmed"); }
