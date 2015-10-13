@@ -38,7 +38,7 @@ Make the following changes to the following files:
 
 1. Models/IdentityModels.cs: Replace the whole `ApplicationUser` class with the following:
 ```
-public class ApplicationUser : ParseIdentityUser
+public class ApplicationUser : Parse.AspNet.Identity.ParseIdentityUser
 {
     public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)
     {
