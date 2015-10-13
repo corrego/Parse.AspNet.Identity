@@ -18,24 +18,19 @@ namespace Parse.AspNet.Identity
         public string Email
         {
             get { return User.Email; }
-
             set { User.Email = value; }
         }
 
 
-        [ParseFieldName("phoneNumber")]
         public string PhoneNumber
         {
             get { return Get<string>("phoneNumber"); }
-
             set { User["phoneNumber"] = value; }
         }
 
-        [ParseFieldName("phoneNumberConfirmed")]
         public bool PhoneNumberConfirmed
         {
             get { return Get<bool>("phoneNumberConfirmed"); }
-
             set { User["phoneNumberConfirmed"] = value; }
         }
 
@@ -47,7 +42,6 @@ namespace Parse.AspNet.Identity
         public string UserName
         {
             get { return User.Username; }
-
             set { User.Username = value; }
         }
 

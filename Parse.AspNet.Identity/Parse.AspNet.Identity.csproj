@@ -51,9 +51,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IdentityUser.cs" />
     <Compile Include="IdentityUserLogin.cs" />
     <Compile Include="ParseIdentityRole.cs" />
+    <Compile Include="ParseIdentityUser.cs" />
     <Compile Include="ParseRoleStore.cs" />
     <Compile Include="ParseUserManager.cs" />
     <Compile Include="ParseUserStore.cs" />

@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
     <metadata>
         <id>Parse.AspNet.Identity</id>
-        <version>0.1</version>
+        <version>0.5</version>
         <authors>Carlos Orrego</authors>
         <projectUrl>https://github.com/corrego/Parse.AspNet.Identity</projectUrl>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>

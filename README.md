@@ -4,6 +4,10 @@ Parse.AspNet.Identity
 Asp.Net Identity provider for Parse.com user management. Implements a custom `UserStore`, `UserManager` and `RoleManager` that uses the Parse backend to store and retrieve user information. Right now it supports basic authentication and user creation and not much else, but I will add more features as I need them. You're welcome to contribute too!
 
 # What's New
+## v0.5
+- Breaking change: ParseApplicationUserBase is now called ParseIdentityUser to keep the naming convention and to avoid confusion between Identity implementations. Fixes issue #2
+- Fixed NotImplementedException bug introduced by Asp.Net Identity 2.x that now calls GetAccessFailedCountAsync all the time. Fixes issue #3.
+
 ## v0.4
 - Roles support!
 
@@ -34,7 +38,7 @@ Make the following changes to the following files:
 
 1. Models/IdentityModels.cs: Replace the whole `ApplicationUser` class with the following:
 ```
-public class ApplicationUser : ParseApplicationUserBase
+public class ApplicationUser : ParseIdentityUser
 {
     public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)
     {
