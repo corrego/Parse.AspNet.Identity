@@ -6,29 +6,29 @@ using System.Threading.Tasks;
 
 namespace Parse.AspNet.Identity
 {
+    [ParseClassName("UserLogin")]
     class IdentityUserLogin:ParseObject
     {
-        public IdentityUserLogin() : base("UserLogin")
-        {
-            
-        }
 
+        [ParseFieldName("user")]
         public ParseUser User
         {
-            get { return Get<ParseUser>("user"); }
-            set { Set("user", value);}
+            get { return GetProperty<ParseUser>(); }
+            set { SetProperty(value);}
         }
 
+        [ParseFieldName("loginProvider")]
         public string LoginProvider
         {
-            get { return Get<string>("loginProvider"); }
-            set { Set("loginProvider", value); }
+            get { return GetProperty<string>(); }
+            set { SetProperty(value); }
         }
 
+        [ParseFieldName("providerKey")]
         public string ProviderKey
         {
-            get { return Get<string>("providerKey"); }
-            set { Set("providerKey", value); }
+            get { return GetProperty<string>(); }
+            set { SetProperty(value); }
         }
 
         public static ParseQuery<IdentityUserLogin> Query

@@ -34,6 +34,18 @@
       <HintPath>..\..\..\Soluciones\uGOWeb\packages\Microsoft.AspNet.Identity.Core.2.2.1\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Nito.AsyncEx, Version=3.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Nito.AsyncEx.3.0.1\lib\net45\Nito.AsyncEx.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Nito.AsyncEx.Concurrent, Version=3.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Nito.AsyncEx.3.0.1\lib\net45\Nito.AsyncEx.Concurrent.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Nito.AsyncEx.Enlightenment, Version=3.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Nito.AsyncEx.3.0.1\lib\net45\Nito.AsyncEx.Enlightenment.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Parse, Version=1.6.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\..\Soluciones\uGOWeb\packages\parse.1.6.0\lib\net45\Parse.dll</HintPath>
       <Private>True</Private>
@@ -51,9 +63,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IIdentityExtensions.cs" />
     <Compile Include="IdentityUserLogin.cs" />
+    <Compile Include="NullPasswordHasher.cs" />
     <Compile Include="ParseIdentityRole.cs" />
     <Compile Include="ParseIdentityUser.cs" />
+    <Compile Include="ParseIdentity.cs" />
     <Compile Include="ParseRoleStore.cs" />
     <Compile Include="ParseUserManager.cs" />
     <Compile Include="ParseUserStore.cs" />

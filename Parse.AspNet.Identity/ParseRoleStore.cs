@@ -15,7 +15,17 @@ namespace Parse.AspNet.Identity
 
         public void Dispose()
         {
-            throw new NotImplementedException();
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                // free managed resources
+                // no managed resources yet - nothing to do
+            }
         }
 
         public async Task CreateAsync(ParseIdentityRole role)

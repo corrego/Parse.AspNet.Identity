@@ -5,6 +5,7 @@ namespace Parse.AspNet.Identity
     public class ParseIdentityUser : IUser<string>
     {
         internal ParseUser User { get; set; }
+        internal string SessionToken { get; set; }
 
         public ParseIdentityUser()
         {
@@ -15,31 +16,35 @@ namespace Parse.AspNet.Identity
             PhoneNumberConfirmed = false;
         }
 
-        public string Email
+        public virtual string Email
         {
             get { return User.Email; }
             set { User.Email = value; }
         }
 
+        public virtual string Password
+        {
+            set { User.Password = value; }
+        }
 
-        public string PhoneNumber
+        public virtual string PhoneNumber
         {
             get { return Get<string>("phoneNumber"); }
             set { User["phoneNumber"] = value; }
         }
 
-        public bool PhoneNumberConfirmed
+        public virtual bool PhoneNumberConfirmed
         {
             get { return Get<bool>("phoneNumberConfirmed"); }
             set { User["phoneNumberConfirmed"] = value; }
         }
 
-        public string Id
+        public virtual string Id
         {
             get { return User.ObjectId; }
         }
 
-        public string UserName
+        public virtual string UserName
         {
             get { return User.Username; }
             set { User.Username = value; }

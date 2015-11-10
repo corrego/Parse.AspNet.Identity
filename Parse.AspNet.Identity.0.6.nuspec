@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+    <metadata>
+        <id>Parse.AspNet.Identity</id>
+        <version>0.6</version>
+        <authors>Carlos Orrego</authors>
+        <projectUrl>https://github.com/corrego/Parse.AspNet.Identity</projectUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>Allows you to store and manage your users using the Parse.com cloud backend and Asp.Net Identity for your web application.</description>
+        <summary>Asp.Net Identity provider for Parse.com user management.</summary>
+        <releaseNotes>- better implementation of IUserStore et al. allows for better integration with standard UserManager and proper usage of UserValidator and PasswordValidator
+- added NullPasswordHasher because password hashing is internal to parse
+- proper implementation of IDisposable
+- made ParseIdentityUser properties virtual
+- fixed IdentityUserLogin throwing exception on various queries
+- Password verification and changing are now atomic sequential operations due to limitations in parse library design.</releaseNotes>
+        <dependencies>
+            <dependency id="parse" version="1.6.0" />
+            <dependency id="Microsoft.AspNet.Identity.Core" version="2.2.1" />
+            <dependency id="Nito.AsyncEx" version="3.0.1" />
+        </dependencies>
+    </metadata>
+    <files>
+        <file src="Parse.AspNet.Identity\bin\Release\Parse.AspNet.Identity.dll" target="lib\Parse.AspNet.Identity.dll" />
+    </files>
+</package>

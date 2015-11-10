@@ -1,40 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
+using Nito.AsyncEx;
 
 namespace Parse.AspNet.Identity
 {
     public class ParseUserManager<TUser> : UserManager<TUser> where TUser : ParseIdentityUser, IUser<string>
     {
+        private readonly AsyncLock mutex = new AsyncLock();
+
         public ParseUserManager(IUserStore<TUser> store) : base(store)
         {
-            //ClaimsIdentityFactory = new ClaimsIdentityFactory<TUser, string>();
-        }
-
-
-        public override async Task<IdentityResult> CreateAsync(TUser user, string password)
-        {
-            try
-            {
-                user.User.Password = password;
-                await user.User.SignUpAsync();
-            }
-            catch (ParseException e)
-            {
-                if (e.Message.Contains("already taken"))
-                {
-                    // todo: translate messages from resources
-                }
-                return IdentityResult.Failed(e.Message);
-            }
-
-            return IdentityResult.Success;
+            PasswordHasher = new NullPasswordHasher();
         }
 
         /// <summary>
-        /// Implements Parse log in
+        /// Implements password verification using parse. Password verification cannot be done comparing hashes, we must attempt to login against
+        /// parse in order to check the password.
+        /// Unfortunately, due to parse's library design, verification must be done atomically. This has a big impact on performance because
+        /// now all verifications are done in sequence. Hopefully since this is only used for logging in, the real impact will be negigible.
         /// </summary>
         /// <param name="store"></param>
         /// <param name="user"></param>
@@ -44,9 +31,14 @@ namespace Parse.AspNet.Identity
         {
             try
             {
-                await ParseUser.LogInAsync(user.UserName, password);
-                // Login was successful.
-                return true;
+                using (await mutex.LockAsync())
+                {
+                    var login = await ParseUser.LogInAsync(user.UserName, password);
+                    // Login was successful. Get session id
+                    var session = await ParseSession.GetCurrentSessionAsync();
+                    user.SessionToken = session.SessionToken;
+                    return true;
+                }
             }
             catch (Exception e)
             {
@@ -55,45 +47,66 @@ namespace Parse.AspNet.Identity
             }
         }
 
-        public override Task<IdentityResult> AddClaimAsync(string userId, Claim claim)
+        /// <summary>
+        /// Password changing is rather convoluted. It involves (atomically) becoming the user, logging in to test the current password, changing 
+        /// the password and finally re-logging in to obtain the new session token. It must also be done sequentially with scalability penalties.
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="sessionToken"></param>
+        /// <param name="currentPassword"></param>
+        /// <param name="newPassword"></param>
+        /// <returns></returns>
+        public async Task<IdentityResult> ChangePasswordAsync(string userId, string sessionToken, string currentPassword, string newPassword)
         {
-            return base.AddClaimAsync(userId, claim);
-        }
-
-        public override async Task<IdentityResult> ChangePasswordAsync(string userId, string currentPassword, string newPassword)
-        {
-            // get user
-            var user = await FindByIdAsync(userId);
-            if (user == null)
+            var passwordStore = Store as IUserPasswordStore<TUser, string>;
+            using (await mutex.LockAsync())
             {
-                throw new InvalidOperationException("User does not exist!");
-            }
+                // become the user
+                await ParseUser.BecomeAsync(sessionToken);
+                var userName = ParseUser.CurrentUser.Username;
+                var user = await FindByIdAsync(userId);
 
-            // check if password is correct
-            if (await VerifyPasswordAsync(null, user, currentPassword))
-            {
-                // if the password is correct, we can use CurrentUser to change the password
-                // We add a try and catch block because there might still be a communication error.
+                // verify current password
                 try
                 {
-                    ParseUser.CurrentUser.Password = newPassword;
-                    await ParseUser.CurrentUser.SaveAsync();
-
-                    return IdentityResult.Success;
+                    await ParseUser.LogInAsync(userName, currentPassword);
                 }
-                catch (ParseException e)
+                catch (Exception)
                 {
-                    IdentityResult.Failed(e.Message);
+                    return IdentityResult.Failed("Passwords mismatch");
                 }
+
+                // change password
+                var result = await UpdatePassword(passwordStore, user, newPassword);
+                if (!result.Succeeded)
+                {
+                    return result;
+                }
+
+                result = await UpdateAsync(user);
+
+                // parse requires logout-login after a password change. Changing a password invalidates all session tokens associated with that account
+                if (result == IdentityResult.Success)
+                {
+                    await ParseUser.LogInAsync(userName, newPassword);
+                }
+
+                return result;
             }
-
-            return IdentityResult.Failed("The current password is not correct");
         }
 
-        public override Task<IList<UserLoginInfo>> GetLoginsAsync(string userId)
+        public override Task<IdentityResult> ChangePasswordAsync(string userId, string currentPassword, string newPassword)
         {
-            return Task.FromResult(new List<UserLoginInfo>() as IList<UserLoginInfo>);
+            throw new InvalidOperationException("Use ChangePasswordAsync(string userId, string sessionToken, string currentPassword, string newPassword)");
         }
 
+        public override async Task<ClaimsIdentity> CreateIdentityAsync(TUser user, string authenticationType)
+        {
+            var identity = await base.CreateIdentityAsync(user, authenticationType);
+            // add sessiontoken claim
+            identity.AddClaim(new Claim("urn:parse-sessionToken", user.SessionToken));
+
+            return identity;
+        }
     }
 }

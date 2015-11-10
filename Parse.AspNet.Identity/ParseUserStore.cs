@@ -8,6 +8,7 @@ namespace Parse.AspNet.Identity
 {
     public class ParseUserStore<TUser> : 
         IUserStore<TUser>, 
+        IUserEmailStore<TUser>,
         IUserLockoutStore<TUser, string>, 
         IUserPasswordStore<TUser, string>, 
         IUserTwoFactorStore<TUser, string>,
@@ -17,7 +18,7 @@ namespace Parse.AspNet.Identity
     {
         public ParseUserStore()
         {
-
+            
         }
         
         public void Dispose()
@@ -58,6 +59,18 @@ namespace Parse.AspNet.Identity
 
         public virtual async Task<TUser> FindByIdAsync(string userId)
         {
+            // looking for the current logged user?
+            if (ParseUser.CurrentUser != null && ParseUser.CurrentUser.ObjectId == userId)
+            {
+                var session = await ParseSession.GetCurrentSessionAsync();
+                return new TUser()
+                {
+                    User = ParseUser.CurrentUser,
+                    SessionToken = session.SessionToken
+                };
+            }
+
+            // find regular user
             var query = from users in ParseUser.Query
                 where users.Get<string>("objectId") == userId
                 select users;
@@ -66,8 +79,7 @@ namespace Parse.AspNet.Identity
 
             if (user != null)
             {
-                var appUser = new TUser();
-                appUser.User = user;
+                var appUser = new TUser {User = user};
                 return appUser;
             }
 
@@ -84,8 +96,7 @@ namespace Parse.AspNet.Identity
 
             if (user != null)
             {
-                var appUser = new TUser();
-                appUser.User = user;
+                var appUser = new TUser {User = user};
                 return appUser;
             }
 
@@ -135,9 +146,9 @@ namespace Parse.AspNet.Identity
         #endregion
 
         #region IUserPasswordStore
-        public Task SetPasswordHashAsync(TUser user, string passwordHash)
+        public async Task SetPasswordHashAsync(TUser user, string passwordHash)
         {
-            throw new NotImplementedException();
+            user.User.Password = passwordHash;
         }
 
         public Task<string> GetPasswordHashAsync(TUser user)
@@ -256,7 +267,7 @@ namespace Parse.AspNet.Identity
             }
 
             var query = from login in IdentityUserLogin.Query
-                where login.User.HasSameId(user.User)
+                where login.User == user.User
                 select login;
 
             var result = await query.FindAsync();
@@ -306,6 +317,50 @@ namespace Parse.AspNet.Identity
         public Task<bool> IsInRoleAsync(TUser user, string roleName)
         {
             throw new NotImplementedException();
+        }
+
+        #endregion
+
+        #region IUserEmailStore
+
+        public async Task SetEmailAsync(TUser user, string email)
+        {
+            user.Email = email;
+            await user.User.SaveAsync();
+        }
+
+        public Task<string> GetEmailAsync(TUser user)
+        {
+            return Task.FromResult(user.Email);
+        }
+
+        public Task<bool> GetEmailConfirmedAsync(TUser user)
+        {
+            //return Task.FromResult(user.)
+            // todo: implement
+            return Task.FromResult(false);
+        }
+
+        public Task SetEmailConfirmedAsync(TUser user, bool confirmed)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<TUser> FindByEmailAsync(string email)
+        {
+            var query = from users in ParseUser.Query
+                        where users.Get<string>("email") == email
+                        select users;
+
+            var user = await query.FirstOrDefaultAsync();
+
+            if (user != null)
+            {
+                var appUser = new TUser { User = user };
+                return appUser;
+            }
+
+            return null;
         }
 
         #endregion
